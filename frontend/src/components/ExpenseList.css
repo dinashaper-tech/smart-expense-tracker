@@ -1,0 +1,91 @@
+.expense-list-container {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.expense-list-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 1.1rem;
+}
+
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.expense-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.expense-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.category-indicator {
+  width: 4px;
+  height: 50px;
+  border-radius: 4px;
+}
+
+.expense-details {
+  flex: 1;
+}
+
+.expense-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.expense-header h3 {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 600;
+}
+.expense-amount {
+font-size: 1.2rem;
+font-weight: 700;
+color: #667eea;
+}
+.expense-meta {
+display: flex;
+gap: 16px;
+font-size: 0.85rem;
+color: #666;
+}
+.meta-item {
+display: flex;
+align-items: center;
+gap: 4px;
+}
+.delete-btn {
+background: #fee;
+color: #c33;
+border: none;
+padding: 10px;
+border-radius: 8px;
+cursor: pointer;
+transition: background 0.2s;
+}
+.delete-btn:hover {
+background: #fdd;
+}
