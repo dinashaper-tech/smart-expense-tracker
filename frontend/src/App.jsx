@@ -9,8 +9,8 @@ function App() {
   const [expenses, setExpenses] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Load expenses and analytics on mount
   useEffect(() => {
     loadData();
   }, []);
@@ -18,12 +18,11 @@ function App() {
   const loadData = async () => {
     try {
       setLoading(true);
+      setError(null);
       
-      // Fetch expenses
       const expensesRes = await expenseService.getExpenses();
       setExpenses(expensesRes.data || []);
 
-      // Fetch analytics for current month
       const now = new Date();
       const analyticsRes = await expenseService.getAnalytics(
         now.getMonth() + 1,
@@ -32,17 +31,21 @@ function App() {
       setAnalytics(analyticsRes.data);
     } catch (error) {
       console.error('Error loading data:', error);
+      setError('Failed to load data. Please check if the backend server is running.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleExpenseAdded = async (expenseData) => {
-    const result = await expenseService.createExpense(expenseData);
-    
-    if (result.success) {
-      // Reload data to update list and analytics
-      await loadData();
+    try {
+      const result = await expenseService.createExpense(expenseData);
+      
+      if (result.success) {
+        await loadData();
+      }
+    } catch (error) {
+      throw new Error('Failed to add expense');
     }
   };
 
@@ -50,10 +53,10 @@ function App() {
     if (window.confirm('Are you sure you want to delete this expense?')) {
       try {
         await expenseService.deleteExpense(id);
-        await loadData(); // Reload data after deletion
+        await loadData();
       } catch (error) {
         console.error('Error deleting expense:', error);
-        alert('Failed to delete expense');
+        alert('Failed to delete expense. Please try again.');
       }
     }
   };
@@ -61,7 +64,24 @@ function App() {
   if (loading) {
     return (
       <div className="app">
-        <div className="loading">Loading...</div>
+        <div className="loading">
+          <div className="spinner"></div>
+          <p>Loading your expenses...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="app">
+        <div className="error-state">
+          <h2>Oops!</h2>
+          <p>{error}</p>
+          <button onClick={loadData} className="retry-btn">
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
@@ -69,7 +89,7 @@ function App() {
   return (
     <div className="app">
       <header>
-        <h1>Smart Expense Tracker</h1>
+        <h1> Smart Expense Tracker</h1>
         <p>Track your spending with AI-powered insights</p>
       </header>
 
