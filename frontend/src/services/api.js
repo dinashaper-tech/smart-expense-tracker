@@ -7,9 +7,58 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'user-id': 'demo-user' // Simple demo authentication
   }
 });
+
+// Add token to requests if it exists
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Handle 401 errors (unauthorized)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid - clear storage and redirect to login
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Auth API service
+export const authService = {
+  // Register new user
+  async register(userData) {
+    const response = await api.post('/auth/register', userData);
+    return response.data;
+  },
+
+  // Login user
+  async login(credentials) {
+    const response = await api.post('/auth/login', credentials);
+    return response.data;
+  },
+
+  // Get current user
+  async getCurrentUser() {
+    const response = await api.get('/auth/me');
+    return response.data;
+  },
+
+  // Logout (client-side)
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
+};
 
 // Expense API service
 export const expenseService = {
@@ -43,4 +92,3 @@ export const expenseService = {
     return response.data;
   }
 };
-
