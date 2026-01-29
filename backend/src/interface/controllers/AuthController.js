@@ -11,18 +11,21 @@ class AuthController {
   // POST /api/auth/register
   async register(req, res) {
     try {
+      console.log(' Register request received:', req.body);
       const { name, email, password } = req.body;
 
       // Validate input
       if (!name || !email || !password) {
+        console.log(' Missing fields');
         return res.status(400).json({
           success: false,
           error: 'Please provide name, email, and password'
         });
       }
-
+      console.log('Calling register use case');
       const result = await this.registerUseCase.execute({ name, email, password });
-
+      
+      console.log('Registration successful')
       res.status(201).json({
         success: true,
         data: {
@@ -31,6 +34,7 @@ class AuthController {
         }
       });
     } catch (error) {
+      console.error('Registration error:', error);
       res.status(400).json({
         success: false,
         error: error.message

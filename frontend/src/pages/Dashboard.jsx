@@ -23,17 +23,26 @@ function Dashboard() {
       setLoading(true);
       setError(null);
       
+      console.log(' Loading dashboard data...'); 
+      
+      // Get all expenses
       const expensesRes = await expenseService.getExpenses();
+      console.log('📋 Expenses received:', expensesRes.data?.length || 0); 
       setExpenses(expensesRes.data || []);
 
+      // Get analytics for current month
       const now = new Date();
-      const analyticsRes = await expenseService.getAnalytics(
-        now.getMonth() + 1,
-        now.getFullYear()
-      );
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+      
+      console.log(` Requesting analytics for ${month}/${year}`); 
+      
+      const analyticsRes = await expenseService.getAnalytics(month, year);
+      console.log(' Analytics received:', analyticsRes.data); 
       setAnalytics(analyticsRes.data);
+      
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error(' Error loading data:', error);
       setError('Failed to load data. Please check if the backend server is running.');
     } finally {
       setLoading(false);
@@ -42,12 +51,16 @@ function Dashboard() {
 
   const handleExpenseAdded = async (expenseData) => {
     try {
+      console.log('Adding expense:', expenseData);
       const result = await expenseService.createExpense(expenseData);
       
       if (result.success) {
+        console.log('Expense added successfully'); 
+        // Reload all data to refresh analytics
         await loadData();
       }
     } catch (error) {
+      console.error(' Error adding expense:', error);
       throw new Error('Failed to add expense');
     }
   };
@@ -56,6 +69,8 @@ function Dashboard() {
     if (window.confirm('Are you sure you want to delete this expense?')) {
       try {
         await expenseService.deleteExpense(id);
+        console.log(' Expense deleted'); 
+        // Reload all data to refresh analytics
         await loadData();
       } catch (error) {
         console.error('Error deleting expense:', error);
@@ -79,7 +94,7 @@ function Dashboard() {
     return (
       <div className="app">
         <div className="error-state">
-          <h2>⚠️ Oops!</h2>
+          <h2> Oops!</h2>
           <p>{error}</p>
           <button onClick={loadData} className="retry-btn">
             Try Again
@@ -93,7 +108,7 @@ function Dashboard() {
     <div className="app">
       <header>
         <div>
-          <h1>💰 Smart Expense Tracker</h1>
+          <h1> Smart Expense Tracker</h1>
           <p>Welcome back, {user?.name}!</p>
         </div>
         <button onClick={logout} className="logout-btn">

@@ -13,7 +13,8 @@ class ExpenseController {
   async createExpense(req, res) {
     try {
       const { amount, category, description, date } = req.body;
-      const userId = req.headers['user-id'] || 'demo-user';
+      const userId = req.userId;
+      console.log('Creating expense for user:', userId); 
 
       const expense = await this.createExpenseUseCase.execute({
         userId,
@@ -31,7 +32,8 @@ class ExpenseController {
 
   async getExpenses(req, res) {
     try {
-      const userId = req.headers['user-id'] || 'demo-user';
+      const userId = req.userId;
+      console.log('Fetching expenses for user:', userId);
       const { startDate, endDate } = req.query;
 
       const expenses = await this.getUserExpensesUseCase.execute(userId, { startDate, endDate });
@@ -44,7 +46,7 @@ class ExpenseController {
 
   async getAnalytics(req, res) {
     try {
-      const userId = req.headers['user-id'] || 'demo-user';
+      const userId = req.userId;
       const month = parseInt(req.query.month) || new Date().getMonth() + 1;
       const year = parseInt(req.query.year) || new Date().getFullYear();
 

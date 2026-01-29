@@ -20,7 +20,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date() });
 });
 
+// Auth routes (NO middleware - public)
 app.use('/api/auth', authRoutes);
+
+// Expense routes (WITH middleware - protected)
 app.use('/api', expenseRoutes);
 
 // Error handling middleware

@@ -1,15 +1,36 @@
 const UserModel = require('../database/models/UserModel');
+const bcrypt = require('bcryptjs');
 
 class UserRepository {
   
-  // Create new user
+  // Create new user with hashed password
   async create(userData) {
-    const user = new UserModel(userData);
-    await user.save();
-    return this._mapToSafeUser(user);
+    try {
+      // Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(userData.password, salt);
+      
+      // Create user with hashed password
+      const user = new UserModel({
+        name: userData.name,
+        email: userData.email,
+        password: hashedPassword
+      });
+      
+      // Save to database
+      const savedUser = await user.save();
+      
+      // Return safe user (without password)
+      return this._mapToSafeUser(savedUser);
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new Error('Email already exists');
+      }
+      throw error;
+    }
   }
 
-  // Find user by email
+  // Find user by email (returns full user document for password comparison)
   async findByEmail(email) {
     return await UserModel.findOne({ email });
   }
@@ -22,8 +43,13 @@ class UserRepository {
 
   // Check if email exists
   async emailExists(email) {
-    const user = await UserModel.findOne({ email });
-    return !!user;
+    const count = await UserModel.countDocuments({ email });
+    return count > 0;
+  }
+
+  // Verify password
+  async verifyPassword(plainPassword, hashedPassword) {
+    return await bcrypt.compare(plainPassword, hashedPassword);
   }
 
   // Map to safe user object (without password)

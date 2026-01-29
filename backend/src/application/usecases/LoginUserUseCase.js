@@ -8,14 +8,21 @@ class LoginUserUseCase {
   async execute(credentials) {
     const { email, password } = credentials;
 
-    // Find user by email
-    const user = await this.userRepository.findByEmail(email);
+    // Validate input
+    if (!email || !password) {
+      throw new Error('Email and password are required');
+    }
+
+    // Find user by email (returns full user document with password)
+    const user = await this.userRepository.findByEmail(email.toLowerCase());
+    
     if (!user) {
       throw new Error('Invalid email or password');
     }
 
-    // Check password
-    const isPasswordValid = await user.comparePassword(password);
+    // Verify password
+    const isPasswordValid = await this.userRepository.verifyPassword(password, user.password);
+    
     if (!isPasswordValid) {
       throw new Error('Invalid email or password');
     }
@@ -27,7 +34,7 @@ class LoginUserUseCase {
       { expiresIn: '7d' }
     );
 
-    // Return safe user data (without password)
+    // Get safe user data (without password)
     const safeUser = await this.userRepository.findById(user._id);
 
     return { user: safeUser, token };

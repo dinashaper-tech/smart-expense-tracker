@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
+import { authService } from '../services/api';
 import './Auth.css';
 
 function Register() {
@@ -13,8 +13,8 @@ function Register() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
-  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -29,16 +29,47 @@ function Register() {
 
     setLoading(true);
 
-    const result = await register(formData.name, formData.email, formData.password);
+    try {
+      // Register user
+      const response = await authService.register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
 
-    if (result.success) {
-      navigate('/');
-    } else {
-      setError(result.error);
+      if (response.success) {
+        // Show success message
+        setSuccess(true);
+        
+        // Wait 2 seconds then redirect to login
+        setTimeout(() => {
+          navigate('/login', { 
+            state: { 
+              message: 'Account created successfully! Please login.' 
+            } 
+          });
+        }, 2000);
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.error || 'Registration failed';
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
+
+  if (success) {
+    return (
+      <div className="auth-container">
+        <div className="auth-box">
+          <div className="success-message">
+            <h2>✅ Account Created!</h2>
+            <p>Redirecting to login...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-container">

@@ -131,3 +131,34 @@
   color: #764ba2;
   text-decoration: underline;
 }
+
+/* ... existing styles ... */
+
+.success-message {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.success-message h2 {
+  color: #4caf50;
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.success-message p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* ... existing styles ... */
+
+.success-banner {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  border: 1px solid #4caf50;
+}

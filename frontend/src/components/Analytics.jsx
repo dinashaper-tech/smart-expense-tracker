@@ -26,8 +26,19 @@ function Analytics({ analytics }) {
     }
   }, [analytics]);
 
-  if (!analytics) {
-    return null;
+  if (!analytics || analytics.expenseCount === 0) {
+    return (
+      <div className="analytics-container">
+        <h2>
+          <PieIcon size={24} />
+          Monthly Analytics
+        </h2>
+        <div className="empty-analytics">
+          <p> No expenses this month yet.</p>
+          <p>Add your first expense to see analytics!</p>
+        </div>
+      </div>
+    );
   }
 
   const formatCurrency = (amount) => {

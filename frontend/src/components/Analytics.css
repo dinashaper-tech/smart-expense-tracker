@@ -68,3 +68,21 @@
   color: #555;
   font-size: 1.1rem;
 }
+
+/* ... existing styles ... */
+
+.empty-analytics {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.empty-analytics p {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.empty-analytics p:first-child {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}

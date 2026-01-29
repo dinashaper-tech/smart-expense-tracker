@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    console.log('Logging out - clearing storage'); 
     authService.logout();
     setUser(null);
     window.location.href = '/login';
