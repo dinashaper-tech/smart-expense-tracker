@@ -1,6 +1,6 @@
-markdown# 💰 Smart Expense Tracker - Full Stack Application
+💰 Smart Expense Tracker - Full Stack Application
 
-![images/Swagger.png]
+[](images/Swagger.png)
 
 A comprehensive full-stack expense tracking application with user authentication, real-time analytics, and AI-powered insights. Track your spending, visualize patterns, and make informed financial decisions.
 
@@ -81,7 +81,7 @@ backend/
 └── README.md
 ```
 
-![images/LogIn.png]
+[](images/LogIn.png)
 
 ### 🛠️ Environment Setup
 
@@ -103,7 +103,7 @@ JWT_SECRET=your-super-secret-jwt-key-change-this
 ```bash
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
-![images/SignUp.png]
+[](images/SignUp.png)
 ### 🚀 Run the Backend
 ```bash
 # Install dependencies
@@ -278,8 +278,8 @@ The frontend automatically connects to the backend URL specified in `.env` file.
 3. CORS is enabled on the backend
 
 ---
-![images/Dashboard.png]
-![images/Analysis.png]
+[](images/Dashboard.png)
+[](images/Analysis.png)
 ## 🎨 Features
 
 ### ✅ User Authentication
